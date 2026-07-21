@@ -1,5 +1,7 @@
 # Customer Churn Prediction
 
+[![CI](https://github.com/agvs03/customer-churn-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/agvs03/customer-churn-prediction/actions/workflows/ci.yml)
+
 An end-to-end machine-learning project that predicts whether a telecom customer will churn. It covers the full lifecycle: exploratory analysis, data cleaning, feature engineering, class-imbalance handling with SMOTE, comparison of five models with cross-validation, hyperparameter tuning, experiment tracking with MLflow, and a Dockerized FastAPI service for real-time inference.
 
 The tuned **XGBoost** model reaches **~91% accuracy** and **~0.88 ROC-AUC** on a held-out test set.

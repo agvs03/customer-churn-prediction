@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-train-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate dataset
+        run: python data/generate_data.py --rows 7043 --seed 42 --out data/churn_raw.csv
+
+      - name: Train model (full pipeline)
+        run: python -m src.train
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Verify metrics meet thresholds
+        run: |
+          python - <<'PY'
+          import json
+          m = json.load(open("models/metrics.json"))["test_metrics"]
+          print(f"accuracy={m['accuracy']:.4f}  roc_auc={m['roc_auc']:.4f}")
+          assert m["accuracy"] >= 0.88, "accuracy regression!"
+          assert m["roc_auc"] >= 0.85, "AUC regression!"
+          print("Metric thresholds passed.")
+          PY
+
+      - name: Upload trained artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-and-figures
+          path: |
+            models/
+            reports/figures/
+          retention-days: 14
