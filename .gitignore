@@ -1,0 +1,36 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow
+mlruns/
+mlflow.db*
+mlartifacts/
+
+# Data (keep generator, ignore heavy raw/processed CSVs)
+data/*.csv
+!data/sample_head.csv
+
+# Trained artifacts (regenerate via training)
+models/*.joblib
+models/*.json
+models/*.pkl
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.log
+.pytest_cache/

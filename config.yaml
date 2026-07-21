@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Customer Churn Prediction - central configuration
+# ---------------------------------------------------------------------------
+seed: 42
+target: Churn
+
+data:
+  # If this Kaggle/IBM Telco CSV exists it is used; otherwise a synthetic
+  # dataset of `synthetic_rows` records is generated automatically.
+  telco_csv: data/WA_Fn-UseC_-Telco-Customer-Churn.csv
+  raw_csv: data/churn_raw.csv
+  synthetic_rows: 7043
+  test_size: 0.2
+
+training:
+  cv_folds: 5
+  scoring: roc_auc
+  use_smote: true
+
+mlflow:
+  experiment_name: customer-churn-prediction
+  tracking_uri: sqlite:///mlflow.db
+
+artifacts:
+  model_path: models/churn_xgb_pipeline.joblib
+  metrics_path: models/metrics.json
+  figures_dir: reports/figures
