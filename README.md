@@ -229,4 +229,4 @@ better indicators of model quality than raw accuracy — the project reports all
 
 ## License
 
-MIT
+MIT – see [LICENSE](LICENSE).
