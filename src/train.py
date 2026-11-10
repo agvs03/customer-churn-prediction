@@ -51,7 +51,13 @@ except Exception:  # pragma: no cover
 
 def build_preprocessor(X: pd.DataFrame) -> ColumnTransformer:
     num_cols = X.select_dtypes(include=[np.number]).columns.tolist()
-    cat_cols = X.select_dtypes(include=["object", "category"]).columns.tolist()
+    # Text columns are `object` on pandas 2 but `str` on pandas 3, so detect them
+    # by type helpers instead of select_dtypes(include=["object"]).
+    cat_cols = [
+        c for c in X.columns
+        if isinstance(X[c].dtype, pd.CategoricalDtype)
+        or (pd.api.types.is_string_dtype(X[c]) and c not in num_cols)
+    ]
     return ColumnTransformer(
         transformers=[
             ("num", StandardScaler(), num_cols),

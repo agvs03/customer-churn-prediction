@@ -30,9 +30,10 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     if len(df) != before:
         print(f"[preprocessing] Dropped {before - len(df)} duplicate rows")
 
-    # Encode target to 0/1
-    if "Churn" in df.columns and df["Churn"].dtype == object:
-        df["Churn"] = (df["Churn"].str.strip().str.lower() == "yes").astype(int)
+    # Encode target to 0/1. Check "not numeric" rather than `dtype == object`:
+    # pandas 3 stores text in the dedicated `str` dtype, not `object`.
+    if "Churn" in df.columns and not pd.api.types.is_numeric_dtype(df["Churn"]):
+        df["Churn"] = (df["Churn"].astype(str).str.strip().str.lower() == "yes").astype(int)
 
     # Impute any residual numeric NaNs with median
     num_cols = df.select_dtypes(include=[np.number]).columns
